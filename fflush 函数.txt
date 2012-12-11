@@ -128,3 +128,8 @@ hahah
 
 
 hahah  121314
+
+int main()
+{
+	return 0;
+}
