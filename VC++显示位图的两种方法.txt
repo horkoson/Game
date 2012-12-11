@@ -1,0 +1,51 @@
+void CDSplitView::OnDraw(CDC* pDC)
+{     if(state1==1)
+		{
+	    CBitmap m_bitmap;
+	    HBITMAP hBitmap=(HBITMAP)LoadImage(NULL,_T(filename),IMAGE_BITMAP,
+		   0,0,LR_CREATEDIBSECTION|LR_DEFAULTSIZE|LR_LOADFROMFILE);
+        m_bitmap.Attach (hBitmap);
+	    CDC dcImage;
+	    if(!dcImage.CreateCompatibleDC (pDC))
+		    return;
+	    BITMAP bm;
+	    m_bitmap.GetBitmap (&bm);
+        dcImage.SelectObject (&m_bitmap);
+	    pDC->BitBlt (0,0,bm.bmWidth ,bm.bmHeight ,&dcImage,0,0,SRCCOPY);
+		}
+}
+ 
+
+
+
+void CMy112View::OnDraw(CDC* pDC)
+{
+	CMy112Doc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	// TODO: add draw code for native data here  
+  
+  CDC   memdc;  
+  CBitmap   bitmap;   
+  CWnd   *pDlg=CWnd::FromHandle(AfxGetApp()->m_pMainWnd->GetSafeHwnd());
+  pDC=pDlg->GetDC();   
+  bitmap.LoadBitmap(IDB_BITMAP); 
+  BITMAP bit1;
+  bitmap.GetBitmap(&bit1);
+  memdc.CreateCompatibleDC(NULL);   
+  memdc.SelectObject(&bitmap);   
+  pDC->BitBlt(50,50,bit1.bmWidth,bit1.bmHeight,&memdc,0,0,SRCCOPY);   
+    
+  pDC->DeleteDC();   
+  memdc.DeleteDC();   
+  bitmap.DeleteObject();
+}
+
+
+
+
+
+void Invalidate( BOOL bErase = TRUE ); 
+该函数的作用是使整个窗口客户区无效。窗口的客户区无效意味着需要重绘，例如，如果一个被其它窗口遮住的窗口变成了前台窗口，那么原来被遮住的部分就是无效的，需要重绘。这时Windows会在应用程序的消息队列中放置WM_PAINT消息。MFC为窗口类提供了WM_PAINT的消息处理函数OnPaint，OnPaint负责重绘窗口。视图类有一些例外，在视图类的OnPaint函数中调用了OnDraw函数，实际的重绘工作由OnDraw来完成。参数bErase为TRUE时，重绘区域内的背景将被擦除，否则，背景将保持不变。 
+它和 UpdateWindow( )区别在于： 
+
+UpdateWindow( )的作用是使窗口立即重绘。调用Invalidate等函数后窗口不会立即重绘，这是由于WM_PAINT消息的优先级很低，它需要等消息队列中的其它消息发送完后才能被处理。调用UpdateWindow函数可使WM_PAINT被直接发送到目标窗口，从而导致窗口立即重绘。
